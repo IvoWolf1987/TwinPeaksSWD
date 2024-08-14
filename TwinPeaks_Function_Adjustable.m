@@ -78,7 +78,7 @@ cx = sosfilt(sos2,cx); %transform the trace with the high-pass filter
 
 clear b a c d rl rl2 rl3 rh rh2 rh3 %clear the filter coefficients
 
-[result1, frequencymap1, timepoints1, power1] = spectrogram(cxraw,window,round(SR*ovl),SR*10,SR); %obtain a matrix of amplitudes, the corresponding frequencies, timepoints and power for a sliding fft with 0.5 seconds window-size (using predefined window value, see above), window-overlapp of x seconds (specified by input 'ovl'), and zero-padding for 0.1 Hz resolution (10*SR)
+[result1, frequencymap1, timepoints1, power1] = spectrogram(cxraw,window,round(SR*ovl),SR*10,SR); %obtain a matrix of amplitudes, the corresponding frequencies, timepoints and power for a sliding fft with adjustable window-size (using predefined window value, see above), window-overlapp of x seconds (specified by input 'ovl'), and zero-padding for 0.1 Hz resolution (10*SR)
 
 result1 = abs(result1');
 frequencymap1 = frequencymap1';
@@ -169,11 +169,9 @@ power1 = power1'; %align all results to ease later indexing
         spitze(e) = max(diff(abs(cx(crdx:crdy))));
         slice = cx(crd1:crd2);
         slice = slice - mean(slice);
-        regu = autocorr(slice);
         slice = slice*-1;
         speaks = findpeaks(slice);
         scount(e) = sum(speaks > pilestone);
-        regu = regu(regu < 1);
         artcount(e) = sum(speaks > 10);
         
         clear crd crd1 crd2 crdx crdy slice speaks %clear variables for a new loop
@@ -283,7 +281,7 @@ pstonex = mz + sz;
       else
       subplot(2,1,1)
       plot(xax,plotsignal) %if scale and signal align always scale
-      axis([-3 3 -5 5]) %limit the y-axis to diplay the signal only between 20 and -20 µV
+      axis([-3 3 -5 5]) %limit the y-axis to diplay the signal only between 20 and -20 ÂµV
       title('cortex')
       subplot(2,1,2)
       sval = dvalue + (SR*3); %extend 1.5 seconds from the time-point of detection and use the correpsonding sample for the upper boundary of the plotting window
